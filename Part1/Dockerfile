@@ -1,2 +1,2 @@
 FROM httpd:latest
-COPY ./apache/ /usr/local/apache2/htdocs/
+COPY ./public-html/ /usr/local/apache2/htdocs/
