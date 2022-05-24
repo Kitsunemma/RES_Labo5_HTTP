@@ -1,4 +1,4 @@
-FROM httpd:2.4
-COPY ./public-html/ /usr/local/apache2/htdocs/
-
-COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf
+FROM php:5.6-apache
+COPY ./conf/ /etc/apache2
+RUN a2enmod proxy proxy_http
+RUN a2ensite 000-* 001-*
