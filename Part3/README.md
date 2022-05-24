@@ -43,14 +43,27 @@ je crois quil faut le port 80 pour static et 3000 pour dynamic
 
 Changer le nom du ficher de config?
 
-dans la config du proxy décommenté ServerName
+dans la config du proxy décommenté ServerName (nom=demo.res.ch)
 
 pour ecrir dans le container apt-get update + apt-get install vim
 
 ajouter 
-ProxyPass "/api/xxx" "http://172.17.0.3:3000/"
-ProxyPassReverse "/api/xxx" "http://172.17.0.3:3000/"
+ProxyPass "/api/xxx/" "http://172.17.0.3:3000/"
+ProxyPassReverse "/api/xxx/" "http://172.17.0.3:3000/"
 
 
 ProxyPass "/" "http://172.17.0.2:80/"
 ProxyPassReverse "/" "http://172.17.0.2:80/"
+
+service apache2 restart
+
+activer a2ensite
+
+pour activer: service apache2 reload
+
+module: a2enmod proxy et proxy_http
+
+RUN a2enmod proxy proxy_http
+RUN a2ensite 000-* 001-*
+
+Serveur DNS modifier fichier Host
