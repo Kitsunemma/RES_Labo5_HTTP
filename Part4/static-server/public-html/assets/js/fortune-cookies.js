@@ -22,9 +22,7 @@ $(() => {
             
             $.getJSON( "/api/fortune-cookies/", ( cookie ) => {
                 let cookDate = new Date(cookie.cookedOn);
-                let cookTime = cookDate.getHours()
-                    + ':' + cookDate.getMinutes()
-                    + ':' + cookDate.getSeconds();
+                let cookTime = cookDate.toLocaleTimeString('fr-CH');
                 
                 paper.appendChild( document.createTextNode( cookie.paper ) );
                 cookedOn.appendChild( document.createTextNode( 'Cooked on ' + cookTime ) );
