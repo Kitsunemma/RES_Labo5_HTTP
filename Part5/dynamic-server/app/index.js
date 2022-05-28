@@ -3,7 +3,7 @@ let app = express();
 
 let logdate = () => (new Date()).toUTCString();
 
-app.get('/fortune-cookies/', (req, res) => {
+app.get('/api/fortune-cookies/', (req, res) => {
     console.log([logdate(), req.ip, req.method, req.url].join(' '));
     let papers = [
         "The fortune you seek is in another cookie.",
