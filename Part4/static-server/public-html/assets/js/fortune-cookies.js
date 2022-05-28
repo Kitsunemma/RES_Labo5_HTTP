@@ -13,19 +13,19 @@ $(() => {
             setTimeout(cookieTick, 2000);
         }
         else if (fortuneCookie.classList.contains('out')){
-            while(paper.hasChildNodes()) {
-                paper.removeChild( paper.firstChild );
-            }
-            while(cookedOn.hasChildNodes()) {
-                cookedOn.removeChild( cookedOn.firstChild );
-            }
+
             
             $.getJSON( "/api/fortune-cookies/", ( cookie ) => {
+                while(paper.hasChildNodes())
+                    paper.removeChild( paper.firstChild );
+                while(cookedOn.hasChildNodes())
+                    cookedOn.removeChild( cookedOn.firstChild );
+
                 let cookDate = new Date(cookie.cookedOn);
                 let cookTime = cookDate.toLocaleTimeString('fr-CH');
                 
                 paper.appendChild( document.createTextNode( cookie.paper ) );
-                cookedOn.appendChild( document.createTextNode( 'Cooked on ' + cookTime ) );
+                cookedOn.appendChild( document.createTextNode( 'Cooked at ' + cookTime ) );
                 fortuneCookie.classList.replace('out', 'closed');
             });
 

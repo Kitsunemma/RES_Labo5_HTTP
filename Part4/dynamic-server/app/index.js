@@ -1,7 +1,10 @@
 let express = require('express');
 let app = express();
 
+let logdate = () => (new Date()).toUTCString();
+
 app.get('/', (req, res) => {
+    console.log([logdate(), req.ip, req.method, req.url].join(' '));
     let papers = [
         "The fortune you seek is in another cookie.",
         "A closed mouth gathers no feet.",
@@ -72,5 +75,5 @@ app.get('/', (req, res) => {
 const PORT = 3000;
 
 app.listen(PORT, () => {
-    console.log('Example app listening on port ' + PORT + '!');
+    console.log(logdate() + ' Now listening on port ' + PORT + '!');
 });

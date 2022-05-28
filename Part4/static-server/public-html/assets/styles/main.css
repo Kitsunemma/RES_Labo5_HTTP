@@ -142,8 +142,6 @@ img {
     clip-path: polygon(100% 0%, 40.98% 1%, 35.87% 10%, 50.3% 12%,
         46.39% 27.89%, 57.82% 40.92%, 53% 50.45%, 65.64% 55.85%,
         58.73% 61.25%, 60.52% 99.68%, 100% 100%);
-    
-        /*animation: 1s linear 0s 1 alternate forwards fortune-cookie-right-part;*/
 }
 
 .fortune-cookie.closed .right-part {
@@ -165,7 +163,6 @@ img {
 .fortune-cookie {
     display: inline-block;
     position: relative;
-    cursor: pointer;
 }
 
 .fortune-cookie-wrapper {
