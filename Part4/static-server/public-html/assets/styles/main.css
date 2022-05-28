@@ -1,0 +1,212 @@
+@font-face {
+    font-family: PixelMix;
+    font-weight: normal;
+    src: url('../fonts/pixelmix.ttf');
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: linear-gradient(#068, #034) fixed;
+    color: white;
+    font-family: PixelMix, sans-serif;
+    text-align: center;
+    font-size: 1.5em;
+
+    overflow: hidden;
+}
+
+header {
+    margin-bottom: 4em;
+}
+
+.cool-cat {
+    display: block;
+    position: absolute;
+    left: 1em;
+    bottom: 1em;
+}
+
+img {
+    max-width: 20vw;
+}
+
+.cooked-on {
+    position: absolute;
+    right: 1em;
+    bottom: 1em;
+    font-size: 0.8em;
+}
+
+.fortune-cookie .crumbs {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: transparent;
+    transition: all ease-out 1s;
+}
+
+.fortune-cookie.closed {
+    transition: none;
+    animation: 1s ease-out 0s 1 forwards intro;
+}
+
+@keyframes intro {
+    0% {top: -100vh;}
+    100% {top: 0;}
+}
+
+.fortune-cookie.closed .crumbs {
+    box-shadow:
+            0 0 0 0 rgb(232, 206, 132),
+            0 0 0 0 rgb(232, 206, 132),
+            0 0 0 0 rgb(232, 206, 132),
+            0 0 0 0 rgb(232, 206, 132),
+            0 0 0 0 rgb(232, 206, 132),
+            0 0 0 0 rgb(232, 206, 132),
+            0 0 0 0 rgb(232, 206, 132),
+            0 0 0 0 rgb(232, 206, 132),
+            0 0 0 0 rgb(232, 206, 132),
+            0 0 0 0 rgb(232, 206, 132)
+        ;
+    transition: none;
+}
+
+.fortune-cookie.open .crumbs {
+    box-shadow:
+        4vw 30vh 0 -10px rgb(232, 206, 132),
+        6vw -40vh 0 -10px rgb(232, 206, 132),
+        1vw -50vh 0 -10px rgb(232, 206, 132),
+        -2vw -40vh 0 -10px rgb(232, 206, 132),
+        -4vw 35vh 0 -10px rgb(232, 206, 132),
+        3vw 20vh 0 -10px rgb(232, 206, 132),
+        2vw -30vh 0 -10px rgb(232, 206, 132),
+        5vw 40vh 0 -10px rgb(232, 206, 132),
+        -2vw -45vh 0 -10px rgb(232, 206, 132),
+        -6vw 35vh 0 -10px rgb(232, 206, 132);
+    ;
+}
+
+.fortune-cookie.out .crumbs {
+    box-shadow: none;
+    transition: none;
+}
+
+.fortune-cookie .left-part, .fortune-cookie .right-part {
+    transform-origin: center;
+    transition: all ease-out 1s;
+}
+
+.fortune-cookie .left-part {
+    position: absolute;
+
+    clip-path: polygon(0% 0%, 40.98% 1%, 35.87% 10%, 50.3% 12%,
+        46.39% 27.89%, 57.82% 40.92%, 53% 50.45%, 65.64% 55.85%,
+        58.73% 61.25%, 60.52% 99.68%, 0% 100%);
+}
+
+.fortune-cookie.closed .left-part {
+    margin-left: 1px;
+    transform: rotate(0deg);
+    transition: none;
+}
+
+.fortune-cookie.open .left-part {
+    margin-left: -12em;
+    transform: rotate(30deg);
+}
+
+.fortune-cookie.out .left-part {
+    margin-left: -100vw;
+    transform: rotate(90deg);
+}
+
+
+.fortune-cookie .right-part {
+    position: relative;
+    clip-path: polygon(100% 0%, 40.98% 1%, 35.87% 10%, 50.3% 12%,
+        46.39% 27.89%, 57.82% 40.92%, 53% 50.45%, 65.64% 55.85%,
+        58.73% 61.25%, 60.52% 99.68%, 100% 100%);
+    
+        /*animation: 1s linear 0s 1 alternate forwards fortune-cookie-right-part;*/
+}
+
+.fortune-cookie.closed .right-part {
+    left: 0;
+    transform: rotate(0deg);
+    transition: none;
+}
+
+.fortune-cookie.open .right-part {
+    left: 10em;
+    transform: rotate(-10deg);
+}
+
+.fortune-cookie.out .right-part {
+    left: 100vw;
+    transform: rotate(-90deg);
+}
+
+.fortune-cookie {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+
+.fortune-cookie-wrapper {
+    display: inline-block;
+    position: relative;
+}
+
+.fortune-cookie .paper {
+    position: absolute;
+    left: 50%;
+    top: 25%;
+    margin-left: -10.5em;
+    font-family: sans-serif;
+    color: #d00;
+    border: 1px outset #aaa;
+    padding: 1em 3em;
+    width: 15em;
+    background: linear-gradient(#fff, #ccc);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
+    font-size: 0.8em;
+    transition: all ease-out 0.5s;
+}
+
+.fortune-cookie .paper::selection {
+    background: #d00;
+    color: white;
+}
+
+.fortune-cookie.closed .paper {
+    clip-path: inset(-10px 50% -10px 50%);
+    transform: rotate(3deg);
+    transition: none;
+}
+
+.fortune-cookie.open .paper {
+    transform: rotate(-4deg);
+    clip-path: inset(-10px -10px -10px -10px);
+}
+
+.fortune-cookie.out .paper {
+    top: 100vh;
+    transform: rotate(-90deg);
+    clip-path: inset(-10px -10px -10px -10px);
+}

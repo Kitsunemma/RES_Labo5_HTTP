@@ -2,47 +2,32 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Welcome!</title>
-        
-        <style type="text/css">
-
-            @font-face {
-                font-family: PressStart2P;
-                src: url('./assets/fonts/PressStart2P-Regular.ttf');
-            }
-            
-            html {
-                margin: 0;
-                padding: 0;
-                height: 100%;
-            }
-
-            body {
-                margin: 0;
-                padding: 0;
-                background: linear-gradient(#068, #034);
-                color: white;
-                font-family: PressStart2P, sans-serif;
-                text-align: center;
-                font-size: 1.5em;
-            }
-
-            img {
-                max-width: 20vw;
-            }
-        </style>
+        <title>Welcome on Fortune Cat!</title>
+        <link rel="stylesheet" href="./assets/styles/main.css">
     </head>
     <body>
-        <h1>Welcome on the static HTML page!</h1>
-        <p>This page is so beautiful it brings tears to my eyes :)</p>
-        <img src="./assets/imgs/cool-cat.png" alt="A cool cat with sunglasses!">
-    
+        <header>
+            <h1>Welcome on Fortune Cat!</h1>
+            <p>We tell your fortune here... It's so mysterious!</p>
+        </header>
+        
+        <main>
+            <div class="fortune-cookie-wrapper">
+                <div class="fortune-cookie out">
+                    <div class="paper"></div>
+                    <img class="fortune-cookie left-part" src="./assets/imgs/fortune-cookie.png">
+                    <img class="fortune-cookie right-part" src="./assets/imgs/fortune-cookie.png">
+                    <div class="crumbs"></div>
+                </div>
+            </div>
+            <img class="cool-cat" src="./assets/imgs/cool-cat.png" alt="A cool cat!">
+            <p class="cooked-on"></p>
+        </main>
+
         <!-- Add JQuery -->
         <script type='text/javascript' src='assets/js/jquery-3.6.0.min.js'></script>
 
         <!-- Add custom script -->
         <script type='text/javascript' src='assets/js/fortune-cookies.js'></script>
-    
     </body>
-
 </html>
