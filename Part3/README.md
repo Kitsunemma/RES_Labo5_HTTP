@@ -29,6 +29,9 @@ Pour ouvrir un terminal dans le container
 Get ip address
 `$ docker inspect static | grep -i ipaddress`
 
+sans grep: 
+`$ docker network insect bridge`
+
 responsees:
 static
 "SecondaryIPAddresses": null,
