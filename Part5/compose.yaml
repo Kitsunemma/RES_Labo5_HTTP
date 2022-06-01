@@ -15,15 +15,19 @@ services:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
 
-  # serveur HTTP statique
+  # HTTP statique
   http-static:
     image: img-stat
     labels:
       - traefik.http.routers.http-static.rule=Host(`fortune-cat.local`) && !PathPrefix(`/api/`)
       #- traefik.http.services.http-static-service.loadbalancer.server.port=80 # facultatif si 1 port exposé ?
-      #- traefik.http.services.http-static-service.loadbalancer.sticky.cookie=FORTUNE_CAT_SESSID
+      - traefik.http.services.http-static.loadbalancer.sticky.cookie=true
+      - traefik.http.services.http-static.loadbalancer.sticky.cookie.name=FORTUNE_CAT_SESSID
+    deploy:
+      mode: replicated
+      replicas: 2
   
-  # serveur HTTP dynamique (API REST)
+  # HTTP dynamique (API REST)
   http-dynamic:
     image: img-dyn
     labels:
@@ -33,6 +37,6 @@ services:
       #- traefik.http.services.http-dynamic-service.loadbalancer.server.port=3000 # facultatif si 1 port exposé ?
     
     # écrasable avec docker-compose up -d --scale MYSERVICE=2
-    #deploy:
-    #  mode: replicated
-    #  replicas: 2
+    deploy:
+      mode: replicated
+      replicas: 2

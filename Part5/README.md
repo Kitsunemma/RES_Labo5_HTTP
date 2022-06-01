@@ -111,8 +111,8 @@ Démarrer tous les services :
 
 ### Round-robin for dynamic server
 
-TODO
+Activé par défaut par Traefik si plusieurs instances sont démarrées.
 
 ### Sticky session for static server
 
-TODO
+Pour le voir, démarrer 2 instances du serveur statique et faire Ctrl+F5 depuis un navigateur A pour voir que l'instance 1 répond à chaque fois. Même chose avec un autre navigateur B qui utilisera l'instance 2.

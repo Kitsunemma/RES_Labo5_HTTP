@@ -1,3 +1,5 @@
+docker container prune --force
+
 docker image rm img-stat
 docker image rm img-dyn
 

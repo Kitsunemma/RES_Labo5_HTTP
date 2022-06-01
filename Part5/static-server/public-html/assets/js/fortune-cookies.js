@@ -1,7 +1,7 @@
 $(() => {
     let fortuneCookie = document.querySelector('.fortune-cookie');
     let paper = document.querySelector('.paper');
-    let cookedOn = document.querySelector('.cooked-on');
+    let infos = document.querySelector('.infos');
 
     function cookieTick() {
         if (fortuneCookie.classList.contains('closed')){
@@ -15,17 +15,20 @@ $(() => {
         else if (fortuneCookie.classList.contains('out')){
 
             
-            $.getJSON( "/api/fortune-cookies/", ( cookie ) => {
+            $.getJSON( "/api/fortune-cookies/", ( freshCookie ) => {
                 while(paper.hasChildNodes())
                     paper.removeChild( paper.firstChild );
-                while(cookedOn.hasChildNodes())
-                    cookedOn.removeChild( cookedOn.firstChild );
+                while(infos.hasChildNodes())
+                    infos.removeChild( infos.firstChild );
 
-                let cookDate = new Date(cookie.cookedOn);
-                let cookTime = cookDate.toLocaleTimeString('fr-CH');
+                let cookingDate = new Date(freshCookie.cookedOn);
+                let cookingTime = cookingDate.toLocaleTimeString('fr-CH');
                 
-                paper.appendChild( document.createTextNode( cookie.paper ) );
-                cookedOn.appendChild( document.createTextNode( 'Cooked at ' + cookTime ) );
+                paper.appendChild( document.createTextNode( freshCookie.paper ) );
+
+                let strInfos = 'Fortune cookie cooked at ' + cookingTime;
+                strInfos += ' / Session cookie: ' + document.cookie;
+                infos.appendChild( document.createTextNode( strInfos ) );
                 fortuneCookie.classList.replace('out', 'closed');
             });
 
