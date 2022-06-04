@@ -21,16 +21,38 @@ Afin de récuperer le ficher de configuration de base de Apache, nous avons util
 Malheureusement, PowerShell utilise l'operateur `>` pour transferer des fichier text et non des fichier binaires. nous avons donc du utilisé cette commande pour récuperer le fichier de configuration dans le bon encodage:
 `COPY ./my-httpd.conf /usr/local/apache2/conf/httpd.conf`
 
+## Partie 2 - Serveur dynamique
 
-## Part 2
+Dans cette partie, nous avons dû créer et dockeriser un serveur dynamique utilisant express.js.
 
-## Create the image
+Voici le *Dockerfile* utilisé pour le serveur dynamique: 
 
-`docker build -t dynamic-server .`
+```dockerfile
+FROM node:alpine
+EXPOSE 80
+WORKDIR /usr/app/
+COPY app/ .
+RUN npm install
 
-## Launch the container
+CMD ["node", "index.js"]
+```
 
-`docker run -d --rm -p 80:80 dynamic-server`
+Comme le serveur dynamique doit utiliser express.js, nous avons choisi d'utiliser l'image alpine de Node car elle est plus légère.
+
+La ligne `RUN npm install` permet d'installer toutes les dépendances qui sont décrites dans le fichier **package.json** dont le contenu est le suivant: 
+
+```json
+{
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
+```
+Cela nous permet d'utiliser express.js.
+
+Enfin, la ligne `CMD ["node", "index.js"]` du fichier Dockerfile permet de lancer la commande `node index.js` qui permet de lancer le serveur.
+
+
 
 ## Part 3
 
