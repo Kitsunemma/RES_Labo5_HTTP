@@ -1,18 +1,26 @@
-## Part 1
+## Partie 1 - Serveur statique 
 
-Lancement de Docker
-`$ docker build -t static-server .`
+Dans cette partie, nous avons dû créer et dockeriser un serveur statique Apache.
 
-`$ docker run -dit --rm --name my-running-app -p 8080:80 static-server`
+Voici le *Dockerfile* utilisé pour le serveur statique: 
 
-Pour recuperer la config de base
-`$ docker run --rm httpd:2.4 cat /usr/local/apache2/conf/httpd.conf > my-httpd.conf`
+```dockerfile
+FROM httpd:2.4
+COPY ./public-html/ /usr/local/apache2/htdocs/
 
-Pour mettre notre config (Dans le dockerfile)
+COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf
+```
+
+Comme le projet consiste en une simple pag html, nous avons décidé de prendre l'image httpd la plus simple. 
+
+Dans cette image, le contenu du site se trouve dans le dossier `/usr/local/apache2/htdocs/` et les fichiers de configuration dans le dossier `/usr/local/apache2/conf/`.
+
+Afin de récuperer le ficher de configuration de base de Apache, nous avons utilisé cette commande: 
+`docker run --rm httpd:2.4 cat /usr/local/apache2/conf/httpd.conf > my-httpd.conf`
+
+Malheureusement, PowerShell utilise l'operateur `>` pour transferer des fichier text et non des fichier binaires. nous avons donc du utilisé cette commande pour récuperer le fichier de configuration dans le bon encodage:
 `COPY ./my-httpd.conf /usr/local/apache2/conf/httpd.conf`
 
-Pour ouvrir un terminal dans le container
-`docker exec -it my-running-app /bin/bash`
 
 ## Part 2
 
