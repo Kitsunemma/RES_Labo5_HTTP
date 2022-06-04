@@ -23,6 +23,8 @@ services:
       #- traefik.http.services.http-static-service.loadbalancer.server.port=80 # facultatif si 1 port exposé ?
       - traefik.http.services.http-static.loadbalancer.sticky.cookie=true
       - traefik.http.services.http-static.loadbalancer.sticky.cookie.name=FORTUNE_CAT_SESSID
+    
+    # écrasable avec docker-compose up -d --scale http-dynamic=2
     deploy:
       mode: replicated
       replicas: 2
@@ -36,7 +38,7 @@ services:
       #- "traefik.http.middlewares.http-dynamic.replacepathregex.replacement=/$$1"
       #- traefik.http.services.http-dynamic-service.loadbalancer.server.port=3000 # facultatif si 1 port exposé ?
     
-    # écrasable avec docker-compose up -d --scale MYSERVICE=2
+    # écrasable avec docker-compose up -d --scale http-dynamic=2
     deploy:
       mode: replicated
       replicas: 2
