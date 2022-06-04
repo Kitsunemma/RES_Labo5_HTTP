@@ -44,10 +44,14 @@ img {
 }
 
 .infos {
+    margin: 0;
+    padding: 0;
     position: absolute;
     right: 1em;
     bottom: 1em;
-    font-size: 0.8em;
+    font-size: 0.6em;
+    text-align: right;
+    line-height: 2;
 }
 
 .fortune-cookie .crumbs {

@@ -26,9 +26,12 @@ $(() => {
                 
                 paper.appendChild( document.createTextNode( freshCookie.paper ) );
 
-                let strInfos = 'Fortune cookie cooked at ' + cookingTime;
-                strInfos += ' / Session cookie: ' + document.cookie;
-                infos.appendChild( document.createTextNode( strInfos ) );
+                let infoCookingTime = 'This fortune cookie was cooked at ' + cookingTime;
+                let infoLoadBalancing = 'Browser cookies: ' + document.cookie;
+                infos.appendChild( document.createTextNode( infoCookingTime ) );
+                infos.appendChild( document.createElement('br') );
+                infos.appendChild( document.createTextNode( infoLoadBalancing ) );
+
                 fortuneCookie.classList.replace('out', 'closed');
             });
 

@@ -21,8 +21,8 @@ services:
     labels:
       - traefik.http.routers.http-static.rule=Host(`fortune-cat.local`) && !PathPrefix(`/api/`)
       #- traefik.http.services.http-static-service.loadbalancer.server.port=80 # facultatif si 1 port exposé ?
-      - traefik.http.services.http-static.loadbalancer.sticky.cookie=true
-      - traefik.http.services.http-static.loadbalancer.sticky.cookie.name=FORTUNE_CAT_SESSID
+      #- traefik.http.services.http-static.loadbalancer.sticky.cookie=true
+      - traefik.http.services.http-static.loadbalancer.sticky.cookie.name=TRAEFIK_LOAD_BALANCING
     
     # écrasable avec docker-compose up -d --scale http-dynamic=2
     deploy:
