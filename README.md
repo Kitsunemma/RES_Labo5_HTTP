@@ -269,19 +269,19 @@ Une fois les serveur démarrés, il faut ouvrir un navigateur et accéder à la 
 
 Dans la console, nous pouvons voir en direct lequel des serveurs dynamique lancés répond aux requetés:
 
-**TODO ECE IMG**
+![](C:\Users\Emmanuelle\Documents\RES\labo5\RES_Labo5_HTTP\img\round-robin dynamic-server.PNG)
 
 Pour valider que le serveur statique utilise bien les *sticky session*, il faut cette fois-ci lancer au moins deux instances du serveur statique et, comme avec le serveur dynamique, ne pas mettre l'option `-d` à la commande `docker-compose up`.
 
 Une fois les serveurs démarrés, ouvrir au moins 2 navigateurs (par exemple Google Chrome et Firefox) et accéder à la page du serveur statique. 
 
-Premièrement, le cookie est affiché sur la page web en bas à droite. Il est possible de voir que les navigateurs n'ont pas tous le même cookie.
+Premièrement, le cookie est affiché sur la page web en bas à droite. Il est donc possible de voir que les navigateurs n'ont pas tous le même cookie.
 
-**TODO ECE IMG**
+![](C:\Users\Emmanuelle\Documents\RES\labo5\RES_Labo5_HTTP\img\not-same-cookie-navigateur.PNG)
 
 Deuxièmement, si nous faisons plusieurs `ctrl+F5` sur un des navigateur, nous voyons, dans le terminal, que c'est toujours le même container qui répond.
 
-**TODO ECE IMG**
+![](C:\Users\Emmanuelle\Documents\RES\labo5\RES_Labo5_HTTP\img\sticky-session-static-server.PNG)
 
 #### Remarques
 
