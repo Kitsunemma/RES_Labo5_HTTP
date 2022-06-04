@@ -118,9 +118,31 @@ Il faut aussi s'assurer que seul le reverse proxy ait un mapping de port afin qu
 
 ## Partie 4 - AJAX
 
-(static contien de quoi faire des requete a dynamique pour aller chercher les données et les afficher)
+Dans cette partie, nous avons modifier les serveur statique afin qu'il fassent des requêtes au serveur dynamique en utilisant AJAX.
 
-Ajouter un script javascript dans le static
+Pour ce faire, il a fallut commencer par importer JQuery. Ceci se fait en 2 étapes:
+
+1. Télécharger le fichier `jquery-3.6.0.min.js`.
+1. Ajouter une balise de script dans la page html.
+
+Voici la balise ajoutée: 
+```html
+<script type='text/javascript' src='assets/js/jquery-3.6.0.min.js'></script>
+```
+
+Ensuite, nous avons ajouté un autre script javascript afin de faire une requete au serveur dynamique et de traiter sa réponse.
+
+Pour ce faire, nous avons utilisé la fonction suivante:
+```js
+$.getJSON( "/api/fortune-cookies/", ( cookie ) => {
+        // traitement des données récupérées du serveur dynamique
+});
+```
+
+A nouveau, il faut ajouter une balise script a notre ficher html afin qu'il prenne en compte le contenu de notre script:
+```html
+<script type='text/javascript' src='assets/js/fortune-cookies.js'></script>
+```
 
 ## Part 5
 
