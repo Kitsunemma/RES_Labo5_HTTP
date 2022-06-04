@@ -81,7 +81,7 @@ app.get('/docker/container/ls/', async (req, res) => {
     res.send(
         await dockerApi.listContainers({all: true})
             .then((containers) => containers)
-            .catch((err) => false)
+            .catch((err) => {console.log(err); return false;})
     );
 });
 
@@ -92,7 +92,7 @@ app.get('/docker/container/stop/', async (req, res) => {
     let container = dockerApi.getContainer(req.query.id);
     res.send(await container.stop()
             .then((result) => true)
-            .catch((err) => false)
+            .catch((err) => {console.log(err); return false;})
     );
 });
 
@@ -103,7 +103,7 @@ app.get('/docker/container/start/', async (req, res) => {
     let container = dockerApi.getContainer(req.query.id);
     res.send(await container.start()
             .then((result) => true)
-            .catch((err) => false)
+            .catch((err) => {console.log(err); return false;})
     );
 });
 

@@ -33,6 +33,11 @@ $(() => {
                 infos.appendChild( document.createTextNode( infoLoadBalancing ) );
 
                 fortuneCookie.classList.replace('out', 'closed');
+            })
+            .fail(() => {
+                while(infos.hasChildNodes())
+                    infos.removeChild( infos.firstChild );
+                infos.appendChild( document.createTextNode( 'Unable to reach API server! :(' ) );
             });
 
             setTimeout(cookieTick, 1000);

@@ -4,16 +4,7 @@
     src: url('../fonts/pixelmix.ttf');
 }
 
-html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-
 body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
     background: linear-gradient(#068, #034) fixed;
     color: white;
     font-family: PixelMix, sans-serif;
@@ -24,10 +15,6 @@ body {
 ::selection {
     background: white;
     color: #046;
-}
-
-header {
-    margin-bottom: 4em;
 }
 
 .cool-cat {

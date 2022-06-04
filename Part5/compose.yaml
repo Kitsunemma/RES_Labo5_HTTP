@@ -26,9 +26,6 @@ services:
     deploy:
       mode: replicated
       replicas: 5
-    volumes:
-      # So that Traefik can listen to the Docker events
-      - /var/run/docker.sock:/var/run/docker.sock
 
   # HTTP dynamique (API REST)
   http-dynamic:
@@ -43,6 +40,6 @@ services:
     deploy:
       mode: replicated
       replicas: 2
+    # necessary to access the Docker Engine API
     volumes:
-      # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock

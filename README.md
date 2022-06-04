@@ -258,7 +258,7 @@ Cependant, si nous voulons setter la valeur `cookie.name` (ou setter une autre p
 
 Dans notre cas, nous avons donc ajouté cette ligne au service `http-static`: 
 ```yaml
-- "traefik.http.services.sv-static.loadbalancer.sticky.cookie.name=TRAEFIK_LOAD_BALANCING"
+- "traefik.http.services.sv-static.loadbalancer.sticky.cookie.name=LOAD_BALANCING_ROUTE"
 ```
 
 #### Procédure de validation
