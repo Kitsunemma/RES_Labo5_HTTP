@@ -1,5 +1,7 @@
 let express = require('express');
 let app = express();
+let dockerode = require('dockerode');
+let dockerApi = new dockerode();
 
 let logdate = () => (new Date()).toUTCString();
 
@@ -71,6 +73,40 @@ app.get('/fortune-cookies/', (req, res) => {
 
     res.send(fortuneCookie);
 });
+
+
+app.get('/docker/container/ls/', async (req, res) => {
+    console.log([logdate(), req.ip, req.method, req.url].join(' '));
+
+    res.send(
+        await dockerApi.listContainers({all: true})
+            .then((containers) => containers)
+            .catch((err) => false)
+    );
+});
+
+app.get('/docker/container/stop/', async (req, res) => {
+    console.log([logdate(), req.ip, req.method, req.url].join(' '));
+    console.log('Stopping container ' + req.query.id);
+
+    let container = dockerApi.getContainer(req.query.id);
+    res.send(await container.stop()
+            .then((result) => true)
+            .catch((err) => false)
+    );
+});
+
+app.get('/docker/container/start/', async (req, res) => {
+    console.log([logdate(), req.ip, req.method, req.url].join(' '));
+    console.log('Starting container ' + req.query.id);
+
+    let container = dockerApi.getContainer(req.query.id);
+    res.send(await container.start()
+            .then((result) => true)
+            .catch((err) => false)
+    );
+});
+
 
 const PORT = 3000;
 

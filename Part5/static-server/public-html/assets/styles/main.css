@@ -19,8 +19,6 @@ body {
     font-family: PixelMix, sans-serif;
     text-align: center;
     font-size: 1.5em;
-
-    overflow: hidden;
 }
 
 ::selection {
@@ -215,4 +213,40 @@ img {
     top: 100vh;
     transform: rotate(-90deg);
     clip-path: inset(-10px -10px -10px -10px);
+}
+
+table {
+    width: 100%;
+    text-align: left;
+    border-collapse: separate;
+    border-spacing: 0.3em;
+}
+table th {
+    background: rgba(255,255,255,0.1);
+}
+table th, table td {
+    padding: 0.2em 1em;
+}
+
+a, button {
+    background: rgba(255,255,255,0.3);
+    color: white;
+    padding: 0.2em 1em;
+    border: 2px solid transparent;
+    border-radius: 0.5em;
+    font-weight: bold;
+    font-size: 0.8em;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover, button:hover {
+    border: 2px solid white;
+    text-decoration: none;
+}
+
+a:active, button:active {
+    background: white;
+    color: #057;
+    text-decoration: none;
 }

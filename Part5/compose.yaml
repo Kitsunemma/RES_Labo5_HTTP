@@ -22,11 +22,14 @@ services:
       - "traefik.http.routers.rt-not-api.rule=Host(`fortune-cat.local`) && !PathPrefix(`/api/`)"
       - "traefik.http.routers.rt-not-api.service=sv-static" # (facultatif si 1 seul service)
       - "traefik.http.services.sv-static.loadbalancer.server.port=80" # (facultatif si 1 seul port exposé)
-      - "traefik.http.services.sv-static.loadbalancer.sticky.cookie.name=TRAEFIK_LOAD_BALANCING"
+      - "traefik.http.services.sv-static.loadbalancer.sticky.cookie.name=LOAD_BALANCING_ROUTE"
     deploy:
       mode: replicated
-      replicas: 2
-  
+      replicas: 5
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+
   # HTTP dynamique (API REST)
   http-dynamic:
     image: img-dyn
@@ -40,3 +43,6 @@ services:
     deploy:
       mode: replicated
       replicas: 2
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
