@@ -210,7 +210,7 @@ Enfin la dernière ligne est utilisée de la même manière que la dernière lig
 
 **TODO ECE** pour démo restart = Scale (+ script)
 
-### Plusieurs noeuds serveur
+### Plusieurs nœuds serveur
 
 Pour lancer plusieurs instance du même service Docker, il y a deux manières de faire:
 
@@ -236,17 +236,66 @@ Une simple commande `docker ps` permet de vérifier que le bon nombre de contain
 
 **TODO ECE demander validation a FTI**
 
-### Round-robin for dynamic server and sticky session
+### Round-robin vs sticky session
 
-round-robin gratuit
+Actuellement, Traefik ne supporte que l'algorithme de *round-robin* pour la répartition des charges (cf. [documentation](https://doc.traefik.io/traefik/routing/services/#load-balancing)). Cependant, il est possible de changer ce comportement à l'aide des *sticky session*.
 
-sticky session => réglage Traefik cookie et cookie.name.
+Donc pour utiliser l'algorithme de *round-robin* avec le serveur dynamique, nous n'avons rien à faire car c'est la configuration par défaut de Traefik.
 
-Pour le voir, démarrer 2 instances du serveur statique et faire Ctrl+F5 depuis un navigateur A pour voir que l'instance 1 répond à chaque fois. Même chose avec un autre navigateur B qui utilisera l'instance 2.
+Par contre, pour utiliser les *sticky session* avec le serveur statique, il nous faut ajouter la ligne suivante aux labels du service:
+```yaml
+- "traefik.http.services.http-static.loadbalancer.sticky.cookie=true"
+```
+
+Cependant, si nous voulons setter la valeur `cookie.name` (ou setter une autre propriété du cookie), la ligne précédente semble être incluse avec la ligne suivante:
+```yaml
+- "traefik.http.services.sv-static.loadbalancer.sticky.cookie.name=SESSION_NAME"
+```
+
+Dans notre cas, nous avons donc ajouté cette linge au service `http-satic`: 
+```yaml
+- "traefik.http.services.sv-static.loadbalancer.sticky.cookie.name=TRAEFIK_LOAD_BALANCING"
+```
+
+#### Procédure de validation
+
+Pour valider que le serveur dynamique est bien en *round-robin*, il suffit de lancer au moins 2 instances serveurs dynamique (avec l'une des deux manières vu dans la rubrique [Plusieurs nœuds serveur](#plusieurs-noeuds-serveur)) et de ne pas mettre l'option `-d` à la commande `docker-compose up` afin de voir les détails.
+
+Une fois les serveur démarrés, il faut ouvrir un navigateur et accéder à la page du serveur statique. 
+
+Dans la console, nous pouvons voir en direct lequel des serveurs dynamique lancés répond aux requetés:
+
+**TODO ECE IMG**
+
+Pour valider que le serveur statique utilise bien les *sticky session*, il faut cette fois-ci lancer au moins deux instances du serveur statique et, comme avec le serveur dynamique, ne pas mettre l'option `-d` à la commande `docker-compose up`.
+
+Une fois les serveurs démarrés, ouvrir au moins 2 navigateurs (par exemple Google Chrome et Firefox) et accéder à la page du serveur statique. 
+
+Premièrement, le cookie est affiché sur la page web en bas à droite. Il est possible de voir que les navigateurs n'ont pas tous le même cookie.
+
+**TODO ECE IMG**
+
+Deuxièmement, si nous faisons plusieurs `ctrl+F5` sur un des navigateur, nous voyons, dans le terminal, que c'est toujours le même container qui répond.
+
+**TODO ECE IMG**
+
+#### Remarques
+
+##### Reset d'un cookie
+
+Voici la commande pour reset un cookie (dans le navigateur): `document.cookie = "FORTUNE_CAT_SESSID=; expires=Thu, 01 Jan 1970 00:00:00 GMT;";`
+
+##### Traefik et les *sticky session*
+
+Après plusieurs tests, nous avons remarquer que Traefik utilise les *sticky session* pour identifier les serveurs et non les clients. Il est donc possible d'avoir plusieurs client avec le même id de session car c'est le même serveur qui répond aux clients. Cela arrive si il y a plus de clients que de serveur ou en resetant les cookies.
+
+Il est aussi intéressant de remarquer que les id des serveurs sont données en suivant l'algorithme *round-robin*.
 
 ### Dynamic cluster management
 
-docker-compose up -d --scale http-dynamic=2
+// TODO ECE: valider procedure
+
+docker-compose up --scale http-dynamic=2
 
 ### Managmeent UI
 
