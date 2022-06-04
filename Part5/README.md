@@ -105,14 +105,26 @@ Démarrer tous les services :
 
 ### Plusieurs noeuds serveur
 
+replica: 2
 `docker-compose up -d`
-`docker-compose up -d --scale http-static=2`
-`docker-compose up -d --scale http-dynamic=2`
 
-### Round-robin for dynamic server
+### Round-robin for dynamic server and sticky session
 
-Activé par défaut par Traefik si plusieurs instances sont démarrées.
+round-robin gratuit
 
-### Sticky session for static server
+sticky session => réglage Traefik cookie et cookie.name.
 
 Pour le voir, démarrer 2 instances du serveur statique et faire Ctrl+F5 depuis un navigateur A pour voir que l'instance 1 répond à chaque fois. Même chose avec un autre navigateur B qui utilisera l'instance 2.
+
+### Dynamic cluster management
+
+docker-compose up -d --scale http-dynamic=2
+
+### Managmeent UI
+
+npm i dockerode
+
+list container
+start ocntainer
+stop container
+??? (voir ce que Dockerode propose)
