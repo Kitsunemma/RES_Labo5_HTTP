@@ -54,9 +54,7 @@ Enfin, la ligne `CMD ["node", "index.js"]` du fichier Dockerfile permet de lance
 
 ## Partie 3 - Reverse proxy
 
-Dans cette partie, nous avons du dû créer et dockeriser un reverse proxy avec Apache.
-
-**TODO ECE** config virtualhost 
+Dans cette partie, nous avons du dû créer et dockeriser un reverse proxy avec Apache. 
 
 ### Dockerfile 
 
@@ -69,7 +67,7 @@ RUN a2enmod proxy proxy_http
 RUN a2ensite 000-* 001-*
 ```
 
-Pour le reverse proxy, nous avons décidé de prendre une image php afin de profiter des commande a2enmod et a2ensite qui facilitent la configuration du reverse proxy. Dans cette nouvelle image Apache, les fichiers de configurations se trouvent dans le dossier `/etc/apache2/conf/`.
+Pour le reverse proxy, nous avons décidé de prendre une image php afin de profiter des commande a2enmod et a2ensite qui facilitent la configuration du reverse proxy. Dans cette nouvelle image Apache, les fichiers de configurations se trouvent dans le dossier `/etc/apache2/`.
 
 La commande `RUN a2enmod proxy proxy_http` permet d'ajouter les module **proxy** et **proxy_http**. Sans ces deux module, il n'est pas possible de faire du reverse proxy sur cette image.
 
@@ -77,7 +75,7 @@ La commande `RUN a2ensite 000-* 001-*` permet d'activer les sites dont la config
 
 ### Fichiers de configuration
 
-Le fichier `000-default.conf` ne contient aucune configuration. Cela est utile pour ne pas ...**TODO ECE**
+Le fichier `000-default.conf` ne contient aucune configuration. Cela est utile pour ne pas laisser accès au serveurs si le client ne spécifie pas l'host voulu dans l'en-tête de la requête.
 
 Le fichier `001-reverse-proxy.conf` quant à  lui, contient la définition du nom du serveur ainsi que des différentes routes pour accéder à l'un ou l'autre des serveur (le statique ou le dynamique).
 
