@@ -212,8 +212,29 @@ Enfin la dernière ligne est utilisée de la même manière que la dernière lig
 
 ### Plusieurs noeuds serveur
 
-replica: 2
-`docker-compose up -d`
+Pour lancer plusieurs instance du même service Docker, il y a deux manières de faire:
+
+1. La première consiste à utiliser l'argument `scale` de la commande `docker-compose up` en lui donnant le nom du service et le nombre d'instances voulues: 
+>```
+>docker-compose up --scale http-dynamic=5
+>```
+>Pour lancer 5 instance du service http-dynamique.
+
+2. La deuxième consiste à ajouter à la définition du service dans le fichier `compose.yaml`, la balise `deploy` qui contient une balise  `mode` dont la valeur doit être `replicated` et une balise ` replicas` dont la valeur est le nombre d'instances voulues:
+>```yaml
+>http-dynamic:
+>  ...
+>  deploy:
+>    mode: replicated
+>    replicas: 5
+>```
+>Pour lancer 5 instance du service http-dynamique.
+
+#### Procédure de validation
+
+Une simple commande `docker ps` permet de vérifier que le bon nombre de containers est lancé. 
+
+**TODO ECE demander validation a FTI**
 
 ### Round-robin for dynamic server and sticky session
 
