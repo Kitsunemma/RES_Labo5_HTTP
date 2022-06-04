@@ -236,7 +236,7 @@ Une simple commande `docker ps` permet de vérifier que le bon nombre de contain
 
 **TODO ECE demander validation a FTI**
 
-### Round-robin vs sticky session
+### *Round-robin* vs *sticky session*
 
 Actuellement, Traefik ne supporte que l'algorithme de *round-robin* pour la répartition des charges (cf. [documentation](https://doc.traefik.io/traefik/routing/services/#load-balancing)). Cependant, il est possible de changer ce comportement à l'aide des *sticky session*.
 
@@ -291,13 +291,17 @@ Après plusieurs tests, nous avons remarquer que Traefik utilise les *sticky ses
 
 Il est aussi intéressant de remarquer que les id des serveurs sont données en suivant l'algorithme *round-robin*.
 
-### Dynamic cluster management
+### Gestion dynamique des clusters
 
-// TODO ECE: valider procedure
+Traefik détecte automatiquement les serveurs disponibles et répartit la charge entre eux. Il n'y a donc rien à implémenter pour cette partie.
 
-docker-compose up --scale http-dynamic=2
+#### Procédure de validation
 
-### Managmeent UI
+La procédure de validation revient quasiment à la même que celle de la partie [*Round-robin* vs *sticky session*](#procc3a9dure-de-validation-2), à la différence qu'il faut cette fois-ci, mettre l'option `-d` à la commande `docker-compose up`. il suffit ensuite de refaire un `docker-compose up` avec l'argument `--scale` afin de changer le nombre de serveur qui tournent. 
+
+Pour la vérification, comme nous n'avons plus la console avec les détails, il est possible de vérifier où vont les requêtes avec la commande `docker logs -f my-container` afin d'ouvrir les logs d'un container (faire cette commande autant de fois qu'il y a de serveur).
+
+### Management UI
 
 npm i dockerode
 
