@@ -19,12 +19,10 @@ services:
   http-static:
     image: img-stat
     labels:
-      - traefik.http.routers.http-static.rule=Host(`fortune-cat.local`) && !PathPrefix(`/api/`)
-      #- traefik.http.services.http-static-service.loadbalancer.server.port=80 # facultatif si 1 port exposé ?
-      #- traefik.http.services.http-static.loadbalancer.sticky.cookie=true
-      - traefik.http.services.http-static.loadbalancer.sticky.cookie.name=TRAEFIK_LOAD_BALANCING
-    
-    # écrasable avec docker-compose up -d --scale http-dynamic=2
+      - "traefik.http.routers.rt-not-api.rule=Host(`fortune-cat.local`) && !PathPrefix(`/api/`)"
+      - "traefik.http.routers.rt-not-api.service=sv-static" # (facultatif si 1 seul service)
+      - "traefik.http.services.sv-static.loadbalancer.server.port=80" # (facultatif si 1 seul port exposé)
+      - "traefik.http.services.sv-static.loadbalancer.sticky.cookie.name=TRAEFIK_LOAD_BALANCING"
     deploy:
       mode: replicated
       replicas: 2
@@ -33,12 +31,12 @@ services:
   http-dynamic:
     image: img-dyn
     labels:
-      - traefik.http.routers.http-dynamic.rule=Host(`fortune-cat.local`) && PathPrefix(`/api/`)
-      #- "traefik.http.middlewares.http-dynamic.replacepathregex.regex=^/api/(.*)"
-      #- "traefik.http.middlewares.http-dynamic.replacepathregex.replacement=/$$1"
-      #- traefik.http.services.http-dynamic-service.loadbalancer.server.port=3000 # facultatif si 1 port exposé ?
-    
-    # écrasable avec docker-compose up -d --scale http-dynamic=2
+      - "traefik.http.routers.rt-api.rule=Host(`fortune-cat.local`) && PathPrefix(`/api/`)"
+      - "traefik.http.routers.rt-api.middlewares=mw-api-path"
+      - "traefik.http.routers.rt-api.service=sv-dynamic" # (facultatif si 1 seul service)
+      - "traefik.http.middlewares.mw-api-path.replacepathregex.regex=^/api/(.*)"
+      - "traefik.http.middlewares.mw-api-path.replacepathregex.replacement=/$$1"
+      - "traefik.http.services.sv-dynamic.loadbalancer.server.port=3000" # (facultatif si 1 seul port exposé)
     deploy:
       mode: replicated
       replicas: 2
