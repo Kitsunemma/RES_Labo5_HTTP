@@ -52,56 +52,73 @@ Cela nous permet d'utiliser express.js.
 
 Enfin, la ligne `CMD ["node", "index.js"]` du fichier Dockerfile permet de lancer la commande `node index.js` qui permet de lancer le serveur.
 
+## Partie 3 - Reverse proxy
 
+Dans cette partie, nous avons du dû créer et dockeriser un reverse proxy avec Apache.
 
-## Part 3
+**TODO ECE** config virtualhost 
 
-Get ip address
-`$ docker inspect static | grep -i ipaddress`
+### Dockerfile 
 
-sans grep: 
-`$ docker network insect bridge`
+Voici le *Dockerfile* utilisé pour le reverse proxy:
 
-responsees:
-static
-"SecondaryIPAddresses": null,
-"IPAddress": "172.17.0.2",
-        "IPAddress": "172.17.0.2",
-dynamic
-"SecondaryIPAddresses": null,
-"IPAddress": "172.17.0.3",
-        "IPAddress": "172.17.0.3",
+```dockerfile
+FROM php:5.6-apache
+COPY ./conf/ /etc/apache2/
+RUN a2enmod proxy proxy_http
+RUN a2ensite 000-* 001-*
+```
 
-je crois quil faut le port 80 pour static et 3000 pour dynamic
+Pour le reverse proxy, nous avons décidé de prendre une image php afin de profiter des commande a2enmod et a2ensite qui facilitent la configuration du reverse proxy. Dans cette nouvelle image Apache, les fichiers de configurations se trouvent dans le dossier `/etc/apache2/conf/`.
 
-Changer le nom du ficher de config?
+La commande `RUN a2enmod proxy proxy_http` permet d'ajouter les module **proxy** et **proxy_http**. Sans ces deux module, il n'est pas possible de faire du reverse proxy sur cette image.
 
-dans la config du proxy décommenté ServerName (nom=demo.res.ch)
+La commande `RUN a2ensite 000-* 001-*` permet d'activer les sites dont la configuration commence par **000-** et **001-** 
 
-pour ecrir dans le container apt-get update + apt-get install vim
+### Fichiers de configuration
 
-ajouter 
-ProxyPass "/api/xxx/" "http://172.17.0.3:3000/"
-ProxyPassReverse "/api/xxx/" "http://172.17.0.3:3000/"
+Le fichier `000-default.conf` ne contient aucune configuration. Cela est utile pour ne pas ...**TODO ECE**
 
+Le fichier `001-reverse-proxy.conf` quant à  lui, contient la définition du nom du serveur ainsi que des différentes routes pour accéder à l'un ou l'autre des serveur (le statique ou le dynamique).
+
+La définition des routes se fait à l'aide des lignes suivantes:
+
+```c
+ProxyPass "/api/fortune-cookies/" "http://172.17.0.3:3000/"
+ProxyPassReverse "/api/fortune-cookies/" "http://172.17.0.3:3000/"
 
 ProxyPass "/" "http://172.17.0.2:80/"
 ProxyPassReverse "/" "http://172.17.0.2:80/"
+```
 
-service apache2 restart
+Ces 4 linges sont séparées en deux pour définir deux routes. Les routes les plus spécifiques doivent être déclarées avant les plus générales sinon elles ne seront pas déviées sur la bonne route.
 
-activer a2ensite
+Pour définir une route, il faut deux lignes, la ligne **ProxyPass** et la ligne **ProxyPassReverse**, afin de permettre à Apache de réécrire (si besoin) les requêtes dans les deux sens.
+Ces deux lignes contiennent deux arguments, le premier, correspond à ce qui es reçu dans la requête HTTP et le deuxième correspond à la route vers la machine à laquelle on veut envoyer la requête.
 
-pour activer: service apache2 reload
+> Le port d'écoute du serveur dynamique a changé par rapport à la partie 2 donc la ligne `EXPOSE` du *dockerfile* du serveur dynamique expose le port 3000 maintenant.
 
-module: a2enmod proxy et proxy_http
+Afin de définir ces routes, nous avons besoin des adresses IP des machine dans docker. Pour les trouver, il y a deux commande possible: 
 
-RUN a2enmod proxy proxy_http
-RUN a2ensite 000-* 001-*
+1. `docker inspect `*`nomDuContainer`*` | grep -i ipaddress` 
+1. `docker network insect bridge`
 
-Serveur DNS modifier fichier Host
+La première option nous revoit directement les lignes intéressantes grâce au *grep*. Cependant il faut la faire une fois pour chaque serveur. Alors que la deuxième commande nous revoit toutes les adresses de tous les containers actifs sur docker. Cependant, toutes les autres informations du réseau sont aussi présentes.
 
-## Part 4
+### Script
+
+Comme les adresses IP des serveurs sont directement hard-codées dans la configuration du reverse proxy, nous avons fait des scripts pour nous aider à lancer et arrêter les containers. En effet, pour espérer avoir toujours les mêmes adresses IP, il nous faut toujours créer les containers dans le même ordre. 
+
+Voici les lignes qui créent les containers:
+```
+docker run -dit --rm --name ctr-stat img-stat
+docker run -dit --rm --name ctr-dyn img-dyn
+docker run -dit --rm -p 80:80 --name ctr-proxy img-proxy
+```
+
+Il faut aussi s'assurer que seul le reverse proxy ait un mapping de port afin que les autres serveurs ne soient pas accessible sans passer par le revers proxy.
+
+## Partie 4 - AJAX
 
 (static contien de quoi faire des requete a dynamique pour aller chercher les données et les afficher)
 
