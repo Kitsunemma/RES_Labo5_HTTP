@@ -118,7 +118,7 @@ Il faut aussi s'assurer que seul le reverse proxy ait un mapping de port afin qu
 
 ## Partie 4 - AJAX
 
-Dans cette partie, nous avons modifier les serveur statique afin qu'il fassent des requêtes au serveur dynamique en utilisant AJAX.
+Dans cette partie, nous avons dû modifier les serveur statique afin qu'il fassent des requêtes au serveur dynamique en utilisant des requêtes AJAX.
 
 Pour ce faire, il a fallut commencer par importer JQuery. Ceci se fait en 2 étapes:
 
@@ -144,31 +144,71 @@ A nouveau, il faut ajouter une balise script a notre ficher html afin qu'il pren
 <script type='text/javascript' src='assets/js/fortune-cookies.js'></script>
 ```
 
-## Part 5
+## Partie 5 - Reverse proxy dynamique
 
-**IMPORTANT !!!** Traefik ne réécrit PAS le chemin comme Apache.
-- Apache remplace `/api/fortune-cookies/` par `/` et ExpressJS lit `/`
-- Traefik conserve `/api/fortune-cookies/` et ExpressJS lit `/api/fortune-cookies/`
+Dans cette partie, nous avons dû remplacer le reverse proxy de la partie 3 par un reverse proxy dynamique afin de ne plus avoir les adresses IP hard-codées. 
 
-Pour savoir ce qu'un container affiche, faire :
+Pour ce faire,  nous avons dû utiliser docker compose afin de lancer toutes les images en même temps.
 
-`docker logs my-container`
+Voici la partie du reverse proxy de Traefik:
+```yaml
+reverse-proxy:
+  # The official v2 Traefik docker image
+  image: traefik:v2.7
+  # Enables the web UI and tells Traefik to listen to docker
+  command: --api.insecure=true --providers.docker
+  ports:
+    # The HTTP port
+    - "80:80"
+    # The Web UI (enabled by --api.insecure=true)
+    - "8080:8080"
+  volumes:
+    # So that Traefik can listen to the Docker events
+    - /var/run/docker.sock:/var/run/docker.sock
+```
+Ce bout de fichier `compose.yaml` est complètement repris de la [documentation de Traefik](https://doc.traefik.io/traefik/getting-started/quick-start/).
+**TODO ECE Plus?**
 
-Pour afficher les logs en continu :
+Ensuite viens la description du serveur statique:
+```yaml
+http-static:
+  image: img-stat
+  labels:
+    - "traefik.http.routers.rt-not-api.rule=Host(`fortune-cat.local`) && !PathPrefix(`/api/`)"
+    - "traefik.http.routers.rt-not-api.service=sv-static" # (facultatif si 1 seul service)
+    - "traefik.http.services.sv-static.loadbalancer.server.port=80" # (facultatif si 1 seul port exposé)
+```
 
-`docker logs -f my-container`
+Le premier label est le plus important. Il permet de définir la route accès à ce serveur. Ici, il faut que l'host de la requête soit `fortune-cat.local` et que le chemin ne soit **pas** prefixé par `/api/`.
 
-Pour lancer le service `foo` décrit dans le fichier `compose.yaml` :
+Les deux autres linges permettent de définir que le serveur statique (qui est un service Docker) soit aussi un service Traefik et qu'il écoute sur le port 80.
 
-`docker-compose up -d foo`
+Enfin viens la description du serveur dynamique:
+```yaml
+http-dynamic:
+  image: img-dyn
+  labels:
+    - "traefik.http.routers.rt-api.rule=Host(`fortune-cat.local`) && PathPrefix(`/api/`)"
+    - "traefik.http.routers.rt-api.middlewares=mw-api-path"
+    - "traefik.http.routers.rt-api.service=sv-dynamic" # (facultatif si 1 seul service)
+    - "traefik.http.middlewares.mw-api-path.replacepathregex.regex=^/api/(.*)"
+    - "traefik.http.middlewares.mw-api-path.replacepathregex.replacement=/$$1"
+    - "traefik.http.services.sv-dynamic.loadbalancer.server.port=3000" # (facultatif si 1 seul port exposé)
+```
 
-Pour démarrer N instances du service `foo` :
+De nouveau, la première ligne est la plus imporante pour définire la route d'accès du serveur. Ici, de nouveau le host doit être `fortune-cat.local`, cependant, le chemin doit être préfixé par `/api/`.
 
-`docker-compose up -d --scale foo=N`
+Les deux lignes suivantes permettent de définir un middleware et le nom du service Traefik. 
 
-Démarrer tous les services :
+Le middleware est utilisé pour réécrire le chemin d'accès afin d'enlever le `/api`. CCeci correspond aux deux ligne suivantes:
+```yaml
+    - "traefik.http.middlewares.mw-api-path.replacepathregex.regex=^/api/(.*)"
+    - "traefik.http.middlewares.mw-api-path.replacepathregex.replacement=/$$1"
+```
 
-`docker-compose up`
+Enfin la dernière ligne est utilisée de la même manière que la dernière ligne du serveur statique, elle indique le numéro de port auquel le service écoute.
+
+**TODO ECE** pour démo restart = Scale (+ script)
 
 ### Plusieurs noeuds serveur
 
