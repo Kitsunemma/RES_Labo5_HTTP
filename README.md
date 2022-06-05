@@ -305,9 +305,39 @@ Pour valider le fonctionnement de la gestion dynamique, il faut commencer par fa
 
 ### Management UI
 
-npm i dockerode
+Afin de pouvoir utiliser le module Dockerode pour gérer notre environnement Docker, nous avons dû ajouter une ligne dans le fichier `package.json` du serveur dynamique. Voici donc le nouveau contenu de ce fichier:
+```json
+{
+  "dependencies": {
+    "express": "^4.18.1",
+    "dockerode": "^3.3.1"
+  }
+}
+```
 
-list container
-start ocntainer
-stop container
-??? (voir ce que Dockerode propose)
+Malheureusement, l'ajout de cette dépendance ne suffit pas pour pouvoir modifier l'environnement Docker à l'aide d'une interface web. En effet, afin que le serveur dynamique puisse interagir avec Docker, il nous faut lui ajouter un volume dans le fichier `composer.yaml`: 
+```yaml
+http-dynamic:
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+```
+
+Il est intéressant de noter que cette ligne est la même que celle du service Traefik.
+
+Ensuite, nous pouvons étendre notre API en complétant le fichier `index.js` afin de pouvoir répondre aux 3 nouvelles requêtes GET suivantes:
+
+1. `GET /docker/container/ls/` pour récupérer la liste des containers Docker.
+1. `GET /docker/container/stop/?id=XXX` pour stopper le container Docker dont l'id est `XXX`.
+1. `GET /docker/container/start/?id=XXX` pour lancer le container Docker dont l'id est `XXX`.
+
+Une fois le serveur dynamique compléter, nous pouvons ajouter une page HTML dans le serveur statique afin d'afficher une interface graphique pour envoyer les requêtes au serveur dynamique.
+
+Nous avons donc ajouté le fichier `docker-mgmt-ui.html` qui n'a pas vraiment de contenu comme tous ce qui y est afficher vient des réponses des requêtes au serveur dynamique. Le contenu est donc dans le fichier JavaScript suivant `docker-mgmt-ui.js`. Les réponses des requêtes sont traitées avec la même fonction que dans la partie 4, c'est-à-dire, avec la fonction `$.getJSON(...);`.
+
+Nous avons en plus ajouté des messages afin d'informer l'utilisateur si un service n'arrive pas à être atteint. Dans le premier cas, nous avons un message nous indiquant que nous n'arrivons pas a joindre le serveur dynamique. Cela se peut se produire si tous les serveur dynamiques sont down. Dans le deuxième cas, nous avons un message indiquant que nous n'arrivons pas a atteindre l'API de la machine Docker. Cela se produit surtout si nous oublions d'ajouter un volume au service `http-dynamic` dans le fichier `composer.yaml`.
+
+#### Procédure de validation 
+
+Afin de vérifier le bon fonctionnement de notre API, il nous suffit de lancer la commande `docker-compose up`, de se rendre sur la nouvelle page (à l'aide du bouton sur la page principale ou de l'[URL](http://fortune-cat.local/docker-mgmt-ui.html)) et de tester les arrêts et redémarrages des containers. Nous pouvons voir que ces actions sont bien effectuées à l'aide du terminal.
+
+![](C:\Users\Emmanuelle\Documents\RES\labo5\RES_Labo5_HTTP\img\stop-start-container.PNG)
