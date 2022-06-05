@@ -269,7 +269,7 @@ Une fois les serveur démarrés, il faut ouvrir un navigateur et accéder à la 
 
 Dans la console, nous pouvons voir en direct quels serveurs dynamiques répondent aux requêtes:
 
-![](C:\Users\Emmanuelle\Documents\RES\labo5\RES_Labo5_HTTP\img\round-robin dynamic-server.PNG)
+![](.\img\round-robin dynamic-server.PNG)
 
 Pour valider que le serveur statique utilise bien les *sticky sessions*, il faut cette fois-ci lancer au moins 2 instances du serveur statique et, comme avec le serveur dynamique, ne pas mettre l'option `-d` à la commande `docker-compose up`.
 
@@ -277,11 +277,11 @@ Une fois les serveurs démarrés, ouvrir au moins 2 navigateurs (par exemple Goo
 
 Premièrement, le cookie est affiché sur la page web en bas à droite. Il est donc possible de voir que les navigateurs n'ont pas tous le même cookie.
 
-![](C:\Users\Emmanuelle\Documents\RES\labo5\RES_Labo5_HTTP\img\not-same-cookie-navigateur.PNG)
+![](.\img\not-same-cookie-navigateur.PNG)
 
 Deuxièmement, si nous faisons plusieurs `ctrl+F5` sur un des navigateur, nous voyons, dans la console, que c'est toujours le même container qui répond.
 
-![](C:\Users\Emmanuelle\Documents\RES\labo5\RES_Labo5_HTTP\img\sticky-session-static-server.PNG)
+![](.\img\sticky-session-static-server.PNG)
 
 #### Remarques
 
@@ -326,18 +326,18 @@ Il est intéressant de noter que cette ligne est la même que celle du service T
 
 Ensuite, nous pouvons étendre notre API en complétant le fichier `index.js` afin de pouvoir répondre aux 3 nouvelles requêtes GET suivantes:
 
-1. `GET /docker/container/ls/` pour récupérer la liste des containers Docker.
-1. `GET /docker/container/stop/?id=XXX` pour stopper le container Docker dont l'id est `XXX`.
-1. `GET /docker/container/start/?id=XXX` pour lancer le container Docker dont l'id est `XXX`.
+- `GET /docker/container/ls/` pour récupérer la liste des containers Docker.
+- `GET /docker/container/stop/?id=XXX` pour stopper le container Docker dont l'id est `XXX`.
+- `GET /docker/container/start/?id=XXX` pour lancer le container Docker dont l'id est `XXX`.
 
-Une fois le serveur dynamique compléter, nous pouvons ajouter une page HTML dans le serveur statique afin d'afficher une interface graphique pour envoyer les requêtes au serveur dynamique.
+Une fois le serveur dynamique complété, nous pouvons ajouter une page HTML dans le serveur statique afin d'afficher une interface graphique pour envoyer les requêtes au serveur dynamique.
 
-Nous avons donc ajouté le fichier `docker-mgmt-ui.html` qui n'a pas vraiment de contenu comme tous ce qui y est afficher vient des réponses des requêtes au serveur dynamique. Le contenu est donc dans le fichier JavaScript suivant `docker-mgmt-ui.js`. Les réponses des requêtes sont traitées avec la même fonction que dans la partie 4, c'est-à-dire, avec la fonction `$.getJSON(...);`.
+Nous avons donc ajouté le fichier `docker-mgmt-ui.html` qui n'a pas vraiment de contenu puisque tout ce qui y est affiché vient des réponses des requêtes au serveur dynamique. Le contenu est donc dans le fichier JavaScript suivant : `docker-mgmt-ui.js`. Les réponses des requêtes sont traitées avec la même fonction que dans la partie 4, c'est-à-dire, avec la fonction `$.getJSON(...);`.
 
-Nous avons en plus ajouté des messages afin d'informer l'utilisateur si un service n'arrive pas à être atteint. Dans le premier cas, nous avons un message nous indiquant que nous n'arrivons pas a joindre le serveur dynamique. Cela se peut se produire si tous les serveur dynamiques sont down. Dans le deuxième cas, nous avons un message indiquant que nous n'arrivons pas a atteindre l'API de la machine Docker. Cela se produit surtout si nous oublions d'ajouter un volume au service `http-dynamic` dans le fichier `composer.yaml`.
+Nous avons en plus ajouté des messages afin d'informer l'utilisateur si un service n'arrive pas à être atteint. Dans le premier cas, nous avons un message nous indiquant que nous n'arrivons pas a joindre le serveur dynamique. Cela se peut se produire si tous les serveurs dynamiques sont down. Dans le deuxième cas, nous avons un message indiquant que nous n'arrivons pas a atteindre l'API de la machine Docker. Cela se produit surtout si nous oublions d'ajouter un volume au service `http-dynamic` dans le fichier `composer.yaml`.
 
 #### Procédure de validation 
 
-Afin de vérifier le bon fonctionnement de notre API, il nous suffit de lancer la commande `docker-compose up`, de se rendre sur la nouvelle page (à l'aide du bouton sur la page principale ou de l'[URL](http://fortune-cat.local/docker-mgmt-ui.html)) et de tester les arrêts et redémarrages des containers. Nous pouvons voir que ces actions sont bien effectuées à l'aide du terminal.
+Afin de vérifier le bon fonctionnement de notre API, il nous suffit de lancer la commande `docker-compose up`, de se rendre sur la nouvelle page (à l'aide du bouton sur la page principale ou de l'[URL](http://fortune-cat.local/docker-mgmt-ui.html)) et de tester les arrêts et redémarrages des containers. Nous pouvons voir que ces actions sont bien effectuées en examinant la sortie de `docker-compose` dans le terminal.
 
-![](C:\Users\Emmanuelle\Documents\RES\labo5\RES_Labo5_HTTP\img\stop-start-container.PNG)
+![](.\img\stop-start-container.PNG)
